@@ -1,17 +1,9 @@
 <?php 
-require 'db.class.php';
-require 'panier.class.php';
-$DB = new DB();
-$panier = new panier();
-if(isset($_GET['id'])){
-  $prod = $DB->query('SELECT id FROM produit WHERE id=:id' , array('id' => $_GET['id']));
-  var_dump($prod);
-$panier->add($prod[0]->id);
-die ('le produit a bien été ajouté à votre panier');
-}else{
-    die("Your cart is empty");
-}
-?>
+ require 'db.class.php';
+ require 'panier.class.php';
+ $DB = new DB();
+ $panier = new panier();
+ ?>
  
 <!doctype html>
 <html lang="zxx">
@@ -102,6 +94,7 @@ die ('le produit a bien été ajouté à votre panier');
               </div>
           </div>
       </div>
+
       <!--================Cart Area =================-->
       <section class="cart_area section_padding">
         <div class="container">
@@ -117,20 +110,33 @@ die ('le produit a bien été ajouté à votre panier');
                     <th scope="col">Actions</th>
                   </tr>
                 </thead>
+
+
+
+                <?php 
+              
+      $ids = array_keys($_SESSION['panier']);
+      
+      $produit = $DB->query('SELECT * FROM produit WHERE id IN (1,2)');
+      foreach($produit as $prod):  ?>
+      
+
+
                 <tbody>
                   <tr>
                     <td>
                       <div class="media">
                         <div class="d-flex">
-                          <img src="assets/img/glasses/glas1.png" alt="" />
+                        <img src="assets/img/glasses/glass<?= $prod->id; ?>.png" alt="">
                         </div>
                         <div class="media-body font-family:Playfair Display">
-                          <p>Aberkane Black</p>
+                          <p class="nomprod">
+                        <?= $prod->nomprod; ?></p>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <h5>450 000dt</h5>
+                      <h5 class="prixprod"><?= number_format($prod->prixprod,3); ?> dt</h5>
                     </td>
                     <td>
                       <div class="product_count">
@@ -140,53 +146,29 @@ die ('le produit a bien été ajouté à votre panier');
                       </div>
                     </td>
                     <td>
-                      <h5>450.000dt</h5>
+                      <h5><?= number_format($prod->prixprod,3); ?> dt</h5>
                     </td>
                     <td>
-                      <h5>Delete</h5>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="media">
-                        <div class="d-flex">
-                          <img src="assets/img/glasses/glas2.png" alt="" />
-                        </div>
-                        <div class="media-body">
-                          <p>Aganju Bubinga</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <h5>500 000dt</h5>
-                    </td>
-                  
-                    <td>
-                      <div class="product_count">
-                          <span class="input-number-decrement"> <i class="ti-minus"></i></span>
-                          <input class="input-number" type="text" value="1" min="0" max="10">
-                          <span class="input-number-increment"> <i class="ti-plus"></i></span>
-                      </div>
-                    </td>
-                    <td>
-                      <h5>500.000dt</h5>
-                    </td>
-                    <td>
-                      <h5>Delete</h5>
+                    <a class=" genric-btn primary radius" href="cart.php?del=<?= $prod->id; ?>">Delete</a>
+                    
                     </td>
                   </tr>
+
+                  <?php endforeach; ?>
+
+
                     <td>
-                      <h5>Subtotal</h5>
+                      <h6>Subtotal</h6>
                     </td>
                     <td>
-                      <h6 class="text-danger">950.000dt</h6>
+                      <h6>950.000dt</h6>
                     </td>
                     
                   </tr>
                 </tbody>
               </table>
               <div class="checkout_btn_inner float-right">
-                <a class=" genric-btn danger radius" href="Glasses.html">Continue Shopping</a>
+                <a class=" genric-btn danger radius" href="glasses.php">Continue Shopping</a>
                 <a class=" genric-btn danger radius" href="chechout.html">Proceed to checkout</a>
               </div>
             </div>
